@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import { IMAGES } from './assets/images'
+import { RouterView } from 'vue-router'
+import { Toaster } from 'vue-sonner'
 </script>
 
 <template>
   <RouterView />
+  <Toaster position="bottom-center" rich-colors />
 </template>
 
 <style scoped>

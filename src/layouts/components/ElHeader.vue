@@ -50,7 +50,7 @@
           </router-link>
         </li>
 
-        <Button variant="outline" size="lg" class=""> Add Listing </Button>
+        <AuthModal />
       </ul>
     </nav>
   </header>

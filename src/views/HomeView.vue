@@ -1,15 +1,6 @@
 <script setup lang="ts">
-import { fetchPosts } from '@/apis/testApi/testService'
 import { IMAGES } from '@/assets/images'
 import ElHeader from '@/layouts/components/ElHeader.vue'
-
-const data = async () => {
-  const data = await fetchPosts()
-
-  console.log(data)
-}
-
-data()
 </script>
 
 <template>
