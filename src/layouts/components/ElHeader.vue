@@ -51,9 +51,8 @@
         </li>
 
         <li>
-          <Button @click="openModal" variant="transparent" size="lg"> New listing </Button>
+          <Button @click="onOpen" variant="transparent" size="lg"> New listing </Button>
         </li>
-        <AuthModal :isOpen="isOpen" :close-modal="closeModal" :open-modal="openModal" />
       </ul>
     </nav>
   </header>
@@ -63,6 +62,7 @@
 import { NAVIGATION_MENU } from '@/constants/common'
 import { APP_ROUTES } from '@/constants/route'
 import { cn } from '@/lib/utils'
+import { useAuthModalStore } from '@/providers/auth-modal/authModalStore'
 import {
   FacebookIcon,
   GithubIcon,
@@ -80,17 +80,7 @@ const props = withDefaults(defineProps<HeaderPrrops>(), {
   theme: 'default'
 })
 
-const isOpen = ref(false)
-
-const openModal = () => {
-  console.log('hi')
-  isOpen.value = true
-}
-
-const closeModal = (data: any) => {
-  console.log(data)
-  isOpen.value = false
-}
+const { onOpen } = useAuthModalStore()
 </script>
 
 <style scoped></style>

@@ -1,5 +1,5 @@
 <template>
-  <Dialog :open="isOpen">
+  <Dialog :open="isOpen" @update:open="onOpenChange">
     <DialogContent>
       <DialogHeader>
         <DialogTitle
@@ -19,7 +19,7 @@
                 <SingInForm />
               </TabsContent>
               <TabsContent value="signUp">
-                <SignUpForm @resgister-success="closeModal" />
+                <SignUpForm @onSuccess="(data: any) => onOpenChange(false, data)" />
               </TabsContent>
             </div>
           </Tabs>
@@ -32,11 +32,15 @@
 <script setup lang="ts">
 interface AuthModal {
   isOpen: boolean
-  closeModal: (data: any) => void
-  openModal: () => void
 }
 
-const props = withDefaults(defineProps<AuthModal>(), {
+const emit = defineEmits(['changeOpen'])
+
+withDefaults(defineProps<AuthModal>(), {
   isOpen: false
 })
+
+const onOpenChange = (value: boolean, data?: any) => {
+  emit('changeOpen', value, data)
+}
 </script>

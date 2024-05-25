@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
 import { Toaster } from 'vue-sonner'
+import AuthModalProvider from './providers/auth-modal/AuthModalProvider.vue'
 </script>
 
 <template>
   <RouterView />
   <Toaster position="bottom-center" rich-colors />
+  <AuthModalProvider />
 </template>
 
 <style scoped>

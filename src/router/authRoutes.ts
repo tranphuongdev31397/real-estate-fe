@@ -1,5 +1,6 @@
 import { APP_ROUTES, DEFAULT_ROUTES } from '@/constants/route'
 import MainLayout from '@/layouts/MainLayout.vue'
+import { useAuthModalStore } from '@/providers/auth-modal/authModalStore'
 import { useAuthStore } from '@/stores/auth'
 import type { RouteRecordRaw } from 'vue-router'
 
@@ -25,22 +26,15 @@ export const authRoutes: RouteRecordRaw[] = [
       const pathRedirect = from.fullPath || DEFAULT_ROUTES
       const toRedirect = to.query?.redirect || DEFAULT_ROUTES
 
+      const { onOpen } = useAuthModalStore()
       if (isLoggedIn) {
         next({
           path: pathRedirect,
           replace: true
         })
       } else {
-        next({
-          path: '/', // Path open modal
-          query: {
-            redirect: toRedirect, // Default routes to open the modal
-            modal: 'true' // to check if has
-          },
-          replace: true //
-        }) // Uncomment this if you want to use the modal to login
-
-        next()
+        onOpen() // use Auth modal
+        // next() // Go to login page
       }
     }
   }

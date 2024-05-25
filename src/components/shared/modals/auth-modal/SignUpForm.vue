@@ -29,7 +29,7 @@
         <FormMessage class="m-0 text-xs" />
       </FormItem>
     </FormField>
-    <Button variant="secondary" class="mt-4" type="submit"> Sign Up </Button>
+    <Button :disabled="form.isSubmitting.value" class="mt-4" type="submit"> Sign Up </Button>
   </form>
 </template>
 
@@ -46,14 +46,16 @@ const form = useForm({
   validationSchema: formSchema
 })
 
-const emit = defineEmits(['resgisterSuccess'])
+console.log(form.isSubmitting)
+
+const emit = defineEmits(['onSuccess'])
 
 const onSubmit = form.handleSubmit(async (values) => {
   try {
     const data = await signUp(values)
     toast.success('Sign Up Success')
     form.resetForm()
-    emit('resgisterSuccess', data)
+    emit('onSuccess', data)
   } catch (error: any) {
     console.log(error)
     toast.error(error.message)
