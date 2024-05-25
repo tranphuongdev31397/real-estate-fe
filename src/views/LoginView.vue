@@ -5,5 +5,7 @@ const route = useRoute()
 </script>
 
 <template>
-  <main>Login</main>
+  <main>
+    <RouterView />
+  </main>
 </template>

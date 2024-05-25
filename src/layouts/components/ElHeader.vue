@@ -50,7 +50,10 @@
           </router-link>
         </li>
 
-        <AuthModal />
+        <li>
+          <Button @click="openModal" variant="transparent" size="lg"> New listing </Button>
+        </li>
+        <AuthModal :isOpen="isOpen" :close-modal="closeModal" :open-modal="openModal" />
       </ul>
     </nav>
   </header>
@@ -68,7 +71,6 @@ import {
   MailOpenIcon,
   PhoneIcon
 } from 'lucide-vue-next'
-
 export interface HeaderPrrops {
   class?: string
   theme?: 'default' | 'transparent'
@@ -77,6 +79,18 @@ export interface HeaderPrrops {
 const props = withDefaults(defineProps<HeaderPrrops>(), {
   theme: 'default'
 })
+
+const isOpen = ref(false)
+
+const openModal = () => {
+  console.log('hi')
+  isOpen.value = true
+}
+
+const closeModal = (data: any) => {
+  console.log(data)
+  isOpen.value = false
+}
 </script>
 
 <style scoped></style>

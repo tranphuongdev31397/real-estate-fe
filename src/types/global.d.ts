@@ -2,10 +2,9 @@ export {}
 
 declare global {
   type ResponseSuccess<T = any> = {
-    data: T
+    metadata: T
     message?: string
-    success?: boolean
-    timestamp?: string
+    status: number
   }
 
   type ResponseError = {

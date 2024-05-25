@@ -1,8 +1,5 @@
 <template>
-  <Dialog>
-    <DialogTrigger as-child>
-      <Button variant="transparent" size="lg"> {{ triggerTitle }} </Button>
-    </DialogTrigger>
+  <Dialog :open="isOpen">
     <DialogContent>
       <DialogHeader>
         <DialogTitle
@@ -15,11 +12,15 @@
           <Tabs defaultValue="signIn">
             <TabsList class="w-full">
               <TabsTrigger class="flex-1" value="signIn">Sign in</TabsTrigger>
-              <TabsTrigger class="flex-1" value="newAccount">New account</TabsTrigger>
+              <TabsTrigger class="flex-1" value="signUp">Sign up</TabsTrigger>
             </TabsList>
             <div class="p-4">
-              <TabsContent value="signIn">Make changes to your account here.</TabsContent>
-              <TabsContent value="newAccount">Change your password here.</TabsContent>
+              <TabsContent value="signIn">
+                <SingInForm />
+              </TabsContent>
+              <TabsContent value="signUp">
+                <SignUpForm @resgister-success="closeModal" />
+              </TabsContent>
             </div>
           </Tabs>
         </DialogDescription>
@@ -29,11 +30,13 @@
 </template>
 
 <script setup lang="ts">
-export interface AuthModal {
-  triggerTitle: string
+interface AuthModal {
+  isOpen: boolean
+  closeModal: (data: any) => void
+  openModal: () => void
 }
 
-withDefaults(defineProps<AuthModal>(), {
-  triggerTitle: 'Add Listing'
+const props = withDefaults(defineProps<AuthModal>(), {
+  isOpen: false
 })
 </script>

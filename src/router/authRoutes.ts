@@ -23,6 +23,7 @@ export const authRoutes: RouteRecordRaw[] = [
     beforeEnter: (to, from, next) => {
       const { isLoggedIn } = useAuthStore()
       const pathRedirect = from.fullPath || DEFAULT_ROUTES
+      const toRedirect = to.query?.redirect || DEFAULT_ROUTES
 
       if (isLoggedIn) {
         next({
@@ -30,12 +31,14 @@ export const authRoutes: RouteRecordRaw[] = [
           replace: true
         })
       } else {
-        // next({
-        //   query: {
-        //     redirect: DEFAULT_ROUTES, // Default routes to open the modal
-        //     modal: 'true' // to check if has
-        //   }
-        // })   // Uncomment this if you want to use the modal to login
+        next({
+          path: '/', // Path open modal
+          query: {
+            redirect: toRedirect, // Default routes to open the modal
+            modal: 'true' // to check if has
+          },
+          replace: true //
+        }) // Uncomment this if you want to use the modal to login
 
         next()
       }
