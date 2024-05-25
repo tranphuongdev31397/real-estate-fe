@@ -51,7 +51,20 @@
         </li>
 
         <li>
-          <Button @click="onOpen" variant="transparent" size="lg"> New listing </Button>
+          <Button
+            @click="
+              () => {
+                if (isLoggedIn) {
+                  return
+                }
+                onOpen()
+              }
+            "
+            variant="transparent"
+            size="lg"
+          >
+            New listing
+          </Button>
         </li>
       </ul>
     </nav>
@@ -63,6 +76,7 @@ import { NAVIGATION_MENU } from '@/constants/common'
 import { APP_ROUTES } from '@/constants/route'
 import { cn } from '@/lib/utils'
 import { useAuthModalStore } from '@/providers/auth-modal/authModalStore'
+import { useAuthStore } from '@/stores/auth'
 import {
   FacebookIcon,
   GithubIcon,
@@ -75,6 +89,10 @@ export interface HeaderPrrops {
   class?: string
   theme?: 'default' | 'transparent'
 }
+
+const { isLoggedIn } = useAuthStore()
+
+console.log(isLoggedIn)
 
 const props = withDefaults(defineProps<HeaderPrrops>(), {
   theme: 'default'

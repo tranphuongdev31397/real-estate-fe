@@ -19,7 +19,7 @@
         <FormMessage class="m-0 text-xs" />
       </FormItem>
     </FormField>
-    <Button class="mt-4" type="submit"> Sign in </Button>
+    <Button :disabled="form.isSubmitting.value" class="mt-4" type="submit"> Sign in </Button>
   </form>
 </template>
 
@@ -28,13 +28,28 @@ import { signInSchema } from '@/schemas'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import { FormField } from '@/components/ui/form'
+import { signIn } from '@/apis/authentication/authenticationServices'
+import { toast } from 'vue-sonner'
 const formSchema = toTypedSchema(signInSchema)
 
 const form = useForm({
   validationSchema: formSchema
 })
 
-const onSubmit = form.handleSubmit((values) => {
-  console.log('Form submitted!', values)
+const emit = defineEmits(['onSuccess'])
+
+const onSubmit = form.handleSubmit(async (values) => {
+  try {
+    const { password, phoneOrEmail } = values
+    const signInData = await signIn({
+      password,
+      phone: phoneOrEmail,
+      email: phoneOrEmail
+    })
+
+    emit('onSuccess', signInData)
+  } catch (error: any) {
+    toast.error(error?.message || '')
+  }
 })
 </script>

@@ -16,7 +16,7 @@
             </TabsList>
             <div class="p-4">
               <TabsContent value="signIn">
-                <SingInForm />
+                <SingInForm @onSuccess="(data: any) => onOpenChange(false, data)" />
               </TabsContent>
               <TabsContent value="signUp">
                 <SignUpForm @onSuccess="(data: any) => onOpenChange(false, data)" />

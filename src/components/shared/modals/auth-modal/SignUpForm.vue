@@ -46,8 +46,6 @@ const form = useForm({
   validationSchema: formSchema
 })
 
-console.log(form.isSubmitting)
-
 const emit = defineEmits(['onSuccess'])
 
 const onSubmit = form.handleSubmit(async (values) => {

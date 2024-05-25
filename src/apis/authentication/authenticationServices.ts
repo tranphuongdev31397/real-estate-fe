@@ -8,8 +8,11 @@ import {
 } from '@/services/localStorage'
 import type { RefreshTokenRequest, RefreshTokenResponse } from './authenticationTypes'
 import { APP_ROUTES } from '@/constants'
-import type { SignUpSchema } from '@/schemas'
+import type { SignInSchema, SignUpSchema } from '@/schemas'
 import { Http } from '@/http'
+import type { AuthResponse, AuthUser } from '@/types/auth'
+import type { User } from '@/types/user'
+import { useAuthStore } from '@/stores/auth'
 
 const ENDPOINT = 'auth'
 
@@ -44,10 +47,32 @@ export const refreshToken = async (): Promise<string | undefined> => {
   }
 }
 
-export const signUp = async (payload: SignUpSchema): Promise<ResponseSuccess | null> => {
+export const signUp = async (payload: SignUpSchema): Promise<AuthResponse | null> => {
+  const { setLoggedIn } = useAuthStore()
   try {
-    const res = await Http.post<ResponseSuccess<any>>(ENDPOINT + '/sign-up', payload)
-    return res?.metadata
+    const res = await Http.post<ResponseSuccess<AuthResponse>>(ENDPOINT + '/sign-up', payload)
+    if (res?.metadata.tokens) {
+      saveToken(res?.metadata.tokens.accessToken, res?.metadata.tokens.refreshToken, '', '')
+
+      setLoggedIn(res.metadata)
+    }
+    return res?.metadata || null
+  } catch (error) {
+    throw error || ''
+  }
+}
+
+export const signIn = async (payload: SignUpSchema): Promise<AuthResponse | null> => {
+  const { setLoggedIn } = useAuthStore()
+
+  try {
+    const res = await Http.post<ResponseSuccess<AuthResponse>>(ENDPOINT + '/sign-in', payload)
+    if (res?.metadata.tokens) {
+      saveToken(res?.metadata.tokens.accessToken, res?.metadata.tokens.refreshToken, '', '')
+
+      setLoggedIn(res.metadata)
+    }
+    return res?.metadata || null
   } catch (error) {
     throw error || ''
   }

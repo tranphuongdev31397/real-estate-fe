@@ -10,7 +10,7 @@ export const signInSchema = z.object({
     .string({
       message: 'This field is required'
     })
-    .refine((val) => regexPhoneOrEmail.test(val), 'Email or Phone  is not valid'),
+    .refine((val) => regexPhoneOrEmail.test(val), 'Email or Phone is not valid'),
   password: z
     .string({
       message: 'Password is required'

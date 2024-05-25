@@ -1,4 +1,6 @@
 import { Authentication } from '@/constants'
+import type { AuthResponse, AuthUser } from '@/types/auth'
+import type { User } from '@/types/user'
 import { defineStore, acceptHMRUpdate } from 'pinia'
 
 interface IUser {
@@ -12,22 +14,33 @@ interface IToken {
 }
 
 export const useAuthStore = defineStore('auth', () => {
-  const isLoggedIn = ref<boolean>(false)
-  const info = ref<IUser | null>(null)
-  const tokens = ref<IToken | null>(null)
+  const accessToken = useLocalStorage<string | null>(Authentication.AccessToken, null)
+  const refreshToken = useLocalStorage<string | null>(Authentication.RefreshToken, null)
 
-  const setInfo = (user: IUser) => {
+  const isLoggedIn = ref<boolean>(!!accessToken.value)
+  const info = ref<AuthUser | null>(null)
+  const tokens = ref<IToken | null>({
+    accessToken: accessToken.value || '',
+    refreshToken: refreshToken.value || ''
+  })
+
+  const setInfo = (user: AuthUser) => {
     info.value = user
   }
 
   const setIsLoggedIn = (statusLogin: boolean) => {
     isLoggedIn.value = statusLogin
   }
-  const accessToken = useLocalStorage<string | null>(Authentication.AccessToken, null)
   const setTokens = (token: IToken) => {
     tokens.value = token
     // Set Local Storage
     accessToken.value = token.accessToken
+  }
+
+  const setLoggedIn = ({ tokens, user }: AuthResponse) => {
+    setIsLoggedIn(true)
+    setTokens(tokens)
+    setInfo(user)
   }
 
   const clearStore = () => {
@@ -43,7 +56,8 @@ export const useAuthStore = defineStore('auth', () => {
     setInfo,
     setIsLoggedIn,
     setTokens,
-    clearStore
+    clearStore,
+    setLoggedIn
   }
 })
 
