@@ -1,3 +1,5 @@
+import type { IToken } from '@/types/auth'
+
 export type Authentication = {
   accessToken: string
   refreshToken: string
@@ -26,8 +28,5 @@ export type RefreshTokenRequest = {
 }
 
 export type RefreshTokenResponse = {
-  accessToken: string
-  refreshToken: string
-  expiresAt: string
-  deviceId: string
+  tokens: IToken
 }

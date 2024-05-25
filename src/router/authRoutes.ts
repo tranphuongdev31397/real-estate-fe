@@ -27,15 +27,11 @@ export const authRoutes: RouteRecordRaw[] = [
       const authStore = useAuthStore()
       const pathRedirect = from.fullPath || DEFAULT_ROUTES
 
-      const { onOpen } = useAuthModalStore()
       if (authStore.isLoggedIn) {
         next({
           path: pathRedirect,
           replace: true
         })
-      } else {
-        onOpen() // use Auth modal
-        // next() // Go to login page
       }
     }
   }

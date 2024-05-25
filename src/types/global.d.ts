@@ -15,5 +15,6 @@ declare global {
     path: string
     status: number
     timestamp: string
+    code: number
   }
 }

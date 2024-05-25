@@ -20,6 +20,7 @@ axiosInstance.interceptors.response.use(
   },
   async (error: any) => {
     const res: ResponseError = error.response.data
+
     if (res?.errorCode == ErrorCode.AccessTokenExpired && !error.config._isRetry) {
       return refreshToken().then((response) => {
         if (response) {

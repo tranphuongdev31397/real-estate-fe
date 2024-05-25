@@ -2,6 +2,7 @@ import router from '@/router'
 import { axios } from '@/http/axios'
 import {
   destroySensitiveInfo,
+  getBearerToken,
   getDeviceId,
   getRefreshToken,
   saveToken
@@ -12,30 +13,31 @@ import type { SignUpSchema } from '@/schemas'
 import { Http } from '@/http'
 import type { AuthResponse } from '@/types/auth'
 import { useAuthStore } from '@/stores/auth'
+import { toast } from 'vue-sonner'
 
 const ENDPOINT = 'auth'
 
 export const refreshToken = async (): Promise<string | undefined> => {
-  const { clearStore } = useAuthStore()
+  const { clearStore, setTokens } = useAuthStore()
 
   try {
-    if (getRefreshToken() && getDeviceId()) {
-      const data: RefreshTokenRequest = {
-        refreshToken: getRefreshToken() ?? ''
-      }
-
-      const res = await axios.post<ResponseSuccess<RefreshTokenResponse>>(
+    if (getRefreshToken()) {
+      const res = await axios.get<ResponseSuccess<RefreshTokenResponse>>(
         ENDPOINT + '/refresh-token',
-        data,
         {
           headers: {
-            'Device-Id': getDeviceId()
+            'Device-Id': getDeviceId(),
+            'x-refresh-token': getRefreshToken(),
+            Authorization: getBearerToken()
           }
         }
       )
-      const { accessToken, refreshToken, expiresAt, deviceId } = res.data?.metadata ?? {}
-      saveToken(accessToken, refreshToken, expiresAt, deviceId)
+      const tokens = res.data?.metadata?.tokens ?? {}
+
+      saveToken(tokens.accessToken, tokens.refreshToken, '', '')
+      setTokens(tokens)
       // TODO: display dialog session expired
+
       return 'Successfully'
     }
 
@@ -44,9 +46,9 @@ export const refreshToken = async (): Promise<string | undefined> => {
     router.push({ name: APP_ROUTES.LOGIN.name })
   } catch (error: any) {
     // TODO: display dialog session expired
+    toast.error('Token expired, please login again!')
     clearStore()
     destroySensitiveInfo()
-    router.push({ name: APP_ROUTES.LOGIN.name })
   }
 }
 
