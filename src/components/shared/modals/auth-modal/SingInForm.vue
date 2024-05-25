@@ -14,7 +14,7 @@
       <FormItem>
         <FormLabel>Password</FormLabel>
         <FormControl>
-          <Input type="text" placeholder="Password" v-bind="componentField" />
+          <InputPassword placeholder="Password" v-bind="componentField" />
         </FormControl>
         <FormMessage class="m-0 text-xs" />
       </FormItem>

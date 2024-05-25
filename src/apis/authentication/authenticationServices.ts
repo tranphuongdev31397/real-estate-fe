@@ -8,15 +8,16 @@ import {
 } from '@/services/localStorage'
 import type { RefreshTokenRequest, RefreshTokenResponse } from './authenticationTypes'
 import { APP_ROUTES } from '@/constants'
-import type { SignInSchema, SignUpSchema } from '@/schemas'
+import type { SignUpSchema } from '@/schemas'
 import { Http } from '@/http'
-import type { AuthResponse, AuthUser } from '@/types/auth'
-import type { User } from '@/types/user'
+import type { AuthResponse } from '@/types/auth'
 import { useAuthStore } from '@/stores/auth'
 
 const ENDPOINT = 'auth'
 
 export const refreshToken = async (): Promise<string | undefined> => {
+  const { clearStore } = useAuthStore()
+
   try {
     if (getRefreshToken() && getDeviceId()) {
       const data: RefreshTokenRequest = {
@@ -24,7 +25,7 @@ export const refreshToken = async (): Promise<string | undefined> => {
       }
 
       const res = await axios.post<ResponseSuccess<RefreshTokenResponse>>(
-        '/api/v1/oauth2/refresh-token',
+        ENDPOINT + '/refresh-token',
         data,
         {
           headers: {
@@ -38,10 +39,12 @@ export const refreshToken = async (): Promise<string | undefined> => {
       return 'Successfully'
     }
 
+    clearStore()
     destroySensitiveInfo()
     router.push({ name: APP_ROUTES.LOGIN.name })
   } catch (error: any) {
     // TODO: display dialog session expired
+    clearStore()
     destroySensitiveInfo()
     router.push({ name: APP_ROUTES.LOGIN.name })
   }
@@ -73,6 +76,20 @@ export const signIn = async (payload: SignUpSchema): Promise<AuthResponse | null
       setLoggedIn(res.metadata)
     }
     return res?.metadata || null
+  } catch (error) {
+    throw error || ''
+  }
+}
+
+export const signOut = async (): Promise<AuthResponse | null> => {
+  const { clearStore } = useAuthStore()
+
+  try {
+    const res = await Http.get<ResponseSuccess<{}>>(ENDPOINT + '/sign-out')
+
+    clearStore()
+    destroySensitiveInfo()
+    return null
   } catch (error) {
     throw error || ''
   }

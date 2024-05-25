@@ -8,7 +8,6 @@ export const useAuthModalStore = defineStore('authModal', () => {
   }
 
   function onOpen() {
-    console.log('first')
     isOpen.value = true
   }
 

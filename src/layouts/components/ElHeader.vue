@@ -54,7 +54,7 @@
           <Button
             @click="
               () => {
-                if (isLoggedIn) {
+                if (authStore.isLoggedIn) {
                   return
                 }
                 onOpen()
@@ -65,6 +65,10 @@
           >
             New listing
           </Button>
+        </li>
+
+        <li v-show="authStore.isLoggedIn">
+          <Button @click="logOut" class="text-white" size="lg" variant="link">Sign out </Button>
         </li>
       </ul>
     </nav>
@@ -77,6 +81,7 @@ import { APP_ROUTES } from '@/constants/route'
 import { cn } from '@/lib/utils'
 import { useAuthModalStore } from '@/providers/auth-modal/authModalStore'
 import { useAuthStore } from '@/stores/auth'
+import { signOut } from '@/apis/authentication/authenticationServices'
 import {
   FacebookIcon,
   GithubIcon,
@@ -85,18 +90,25 @@ import {
   MailOpenIcon,
   PhoneIcon
 } from 'lucide-vue-next'
+import { toast } from 'vue-sonner'
 export interface HeaderPrrops {
   class?: string
   theme?: 'default' | 'transparent'
 }
 
-const { isLoggedIn } = useAuthStore()
-
-console.log(isLoggedIn)
+const authStore = useAuthStore()
 
 const props = withDefaults(defineProps<HeaderPrrops>(), {
   theme: 'default'
 })
+
+const logOut = async () => {
+  try {
+    await signOut()
+  } catch (error: any) {
+    toast.error(error?.message || '')
+  }
+}
 
 const { onOpen } = useAuthModalStore()
 </script>

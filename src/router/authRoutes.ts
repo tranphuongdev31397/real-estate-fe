@@ -24,11 +24,11 @@ export const authRoutes: RouteRecordRaw[] = [
     beforeEnter: (to, from, next) => {
       // All routes just enter if not login yet => should be kick up user to the default page if user is log in
 
-      const { isLoggedIn } = useAuthStore()
+      const authStore = useAuthStore()
       const pathRedirect = from.fullPath || DEFAULT_ROUTES
 
       const { onOpen } = useAuthModalStore()
-      if (isLoggedIn) {
+      if (authStore.isLoggedIn) {
         next({
           path: pathRedirect,
           replace: true

@@ -6,8 +6,8 @@ export function requiresAuth(to: RouteLocationNormalized) {
   if (to.meta.requiresAuth) {
     // see more https://router.vuejs.org/guide/advanced/meta.html
     // see more https://router.vuejs.org/guide/advanced/navigation-guards.html
-    const { isLoggedIn } = useAuthStore()
-    if (!isLoggedIn) {
+    const authStore = useAuthStore()
+    if (!authStore.isLoggedIn) {
       return {
         name: APP_ROUTES.LOGIN.name,
         query: {

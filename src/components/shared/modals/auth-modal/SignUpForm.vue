@@ -24,7 +24,7 @@
       <FormItem>
         <FormLabel>Password</FormLabel>
         <FormControl>
-          <Input type="text" placeholder="Password" v-bind="componentField" />
+          <InputPassword placeholder="Password" v-bind="componentField" />
         </FormControl>
         <FormMessage class="m-0 text-xs" />
       </FormItem>
@@ -40,6 +40,7 @@ import { toTypedSchema } from '@vee-validate/zod'
 import { FormField } from '@/components/ui/form'
 import { signUp } from '@/apis/authentication/authenticationServices'
 import { toast } from 'vue-sonner'
+import InputPassword from '../../InputPassword.vue'
 const formSchema = toTypedSchema(signUpSchema)
 
 const form = useForm({
